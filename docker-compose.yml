@@ -1,6 +1,29 @@
 version: '3.3'
 
 services:
+  redis:
+    image: redis:latest
+    restart: always
+    volumes:
+      - .:/usr/local/etc/redis/
+      - "./data/redis_data:/usr/src/app/${BOT_NAME:-tg_bot}/data/redis_data"
+    command: "redis-server /usr/local/etc/redis/redis.conf"
+    env_file:
+      - ".env"
+    networks:
+      - tg_bot
+  db:
+    container_name: database
+    image: sameersbn/postgresql:12-20200524
+    environment:
+      PG_PASSWORD: $PG_PASSWORD
+    restart: always
+    ports:
+      - 5432:5432
+    networks:
+      - tg_bot
+    volumes:
+      - ./postgres:/var/lib/postgresql
   bot:
     image: "${BOT_NAME:-tg_bot-image}"
     container_name: "${BOT_CONTAINER_NAME:-tg_bot-container}"
@@ -16,8 +39,14 @@ services:
       - ".env"
     networks:
       - tg_bot
-
+    depends_on:
+      - db
+      - redis
 
 networks:
   tg_bot:
     driver: bridge
+
+volumes:
+  redis_data:
+    driver: local
