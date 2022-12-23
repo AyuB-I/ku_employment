@@ -5,7 +5,7 @@ services:
     image: redis:latest
     restart: always
     volumes:
-      - .:/usr/local/etc/redis/
+      - ".:/usr/local/etc/redis/"
       - "./data/redis_data:/usr/src/app/${BOT_NAME:-tg_bot}/data/redis_data"
     command: "redis-server /usr/local/etc/redis/redis.conf"
     env_file:
