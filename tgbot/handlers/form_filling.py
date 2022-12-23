@@ -456,7 +456,7 @@ async def ask_again_q16(call: CallbackQuery, bot: Bot, state: FSMContext, callba
     languages.append({"name": state_data["lang_name"], "level": callback_data.data})
     form_text = state_data["form_text"] + f"{callback_data.data}%\n"
     await bot.edit_message_text(text=form_text, chat_id=call.message.chat.id, message_id=state_data["form_message_id"])
-    await state.update_data(form_text=form_text, lagnuages=languages)
+    await state.update_data(form_text=form_text, languages=languages)
     if len(languages) >= 7:
         await state.set_state(FormFillingStates.q16_word_app)
         form_text = form_text + f"<b>Dasturlar:</b>\n"

@@ -4,7 +4,7 @@ from typing import Optional
 
 from sqlalchemy import select, asc, desc, case, func, insert, delete, update
 from sqlalchemy.ext.asyncio.session import AsyncSession
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, NoResultFound
 
 from tgbot.database.models.models import Forms, FormsProfessions, Professions, UniversityDirections, WorkingCompanies, \
     Languages, Applications, Users
@@ -122,8 +122,11 @@ async def delete_direction(session: AsyncSession, direction_id):
 async def get_users_form_id(session: AsyncSession, telegram_id):
     """  Get form_id from table users  """
     query = select(Users.form_id).where(Users.telegram_id == telegram_id)
-    result = await session.execute(query)
-    return result.one()[0]
+    try:
+        result = await session.scalar(query)
+    except NoResultFound:
+        result = None
+    return result
 
 
 async def update_users_form_id(session: AsyncSession, telegram_id, form_id):
@@ -131,6 +134,12 @@ async def update_users_form_id(session: AsyncSession, telegram_id, form_id):
     query = update(Users).where(Users.telegram_id == telegram_id).values(form_id=form_id)
     await session.execute(query)
     await session.commit()
+
+
+async def is_form_updated(session: AsyncSession, form_id: int) -> bool:
+    """  Check if there is data in the updated_at row in the table forms  """
+    result = await session.scalar(select(Forms.updated_at).where(Forms.form_id == form_id))
+    return True if result else False
 
 
 async def add_form(session: AsyncSession, telegram_id: int, full_name: str, birth_date: datetime, gender: str,

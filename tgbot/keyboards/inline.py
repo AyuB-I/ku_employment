@@ -6,7 +6,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from tgbot.database.functions.functions import get_forms, get_professions, get_directions
+from tgbot.database.functions.functions import get_forms, get_professions, get_directions, is_form_updated
 from tgbot.misc.cbdata import MainCallbackFactory
 
 admin_functions = InlineKeyboardMarkup(
@@ -334,7 +334,10 @@ async def make_forms_keyboard(session: AsyncSession, begin: Optional[datetime] =
         text = ""
         for key in forms_dict:
             counter += 1
-            text += f"{counter}. {forms_dict[key]}\n"
+            if await is_form_updated(session, key):
+                text += f"{counter}. {forms_dict[key]}*\n"
+            else:
+                text += f"{counter}. {forms_dict[key]}\n"
             inline_keyboard.row(InlineKeyboardButton(text=counter, callback_data=MainCallbackFactory(action="select",
                                                                                                      data=key).pack()))
         inline_keyboard.adjust(5)
