@@ -72,7 +72,7 @@ async def ask_q2(message: Message, state: FSMContext, bot: Bot):
 
 
 @form_filling_router.message(
-    F.text.regexp(r"(?:0?[1-9]|[12][0-9]|3[01])[.](?:0?[1-9]|1[012])[.](?:19[6-9]\d|200[0-9])$"),
+    F.text.regexp(r"(?:0?[1-9]|[12][0-9]|3[01])[.](?:0?[1-9]|1[012])[.](?:19[6-9]\d|20[01][0-9])$"),
     FormFillingStates.q2_birth_date, flags=flags)
 async def ask_q3(message: Message, state: FSMContext, bot: Bot):
     """  Ask for the user's gender  """
