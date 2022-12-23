@@ -16,14 +16,14 @@ services:
     container_name: database
     image: sameersbn/postgresql:12-20200524
     environment:
-      PG_PASSWORD: $PG_PASSWORD
+      PG_PASSWORD: ${PG_PASSWORD}
     restart: always
     ports:
-      - 5432:5432
+      - "5432:5432"
     networks:
       - tg_bot
     volumes:
-      - ./postgres:/var/lib/postgresql
+      - "./postgres:/var/lib/postgresql"
   bot:
     image: "${BOT_NAME:-tg_bot-image}"
     container_name: "${BOT_CONTAINER_NAME:-tg_bot-container}"
@@ -32,8 +32,8 @@ services:
       context: .
     working_dir: "/usr/src/app/${BOT_NAME:-tg_bot}"
     volumes:
-      - .:/usr/src/app/${BOT_NAME:-tg_bot}
-    command: python3 -m bot
+      - ".:/usr/src/app/${BOT_NAME:-tg_bot}"
+    command: sh -c "python -m alembic upgrade head && python3 -m bot"
     restart: always
     env_file:
       - ".env"
