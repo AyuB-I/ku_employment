@@ -26,7 +26,7 @@ class UniversityDirections(Base):
     __tablename__ = "university_directions"
 
     direction_id = Column(SMALLINT, primary_key=True, autoincrement=True)
-    title = Column(VARCHAR(64), nullable=False, unique=True)
+    title = Column(VARCHAR(32), nullable=False, unique=True)
 
 
 class Forms(Base):
@@ -37,7 +37,7 @@ class Forms(Base):
     birth_date = Column(DATE, nullable=False)
     gender = Column(Enum(GendersEnum), nullable=False)
     phonenum = Column(VARCHAR(20), nullable=False)
-    address = Column(VARCHAR(255), nullable=False)
+    address = Column(VARCHAR(150), nullable=False)
     nation = Column(Enum(NationsEnum), nullable=False)
     university_grade = Column(SMALLINT, nullable=False)
     direction_id = Column(SMALLINT, ForeignKey("university_directions.direction_id", ondelete="SET NULL"),
@@ -71,8 +71,8 @@ class WorkingCompanies(Base):
     __tablename__ = "working_companies"
 
     form_id = Column(SMALLINT, ForeignKey("forms.form_id", ondelete="CASCADE"), primary_key=True)
-    name = Column(VARCHAR(255), nullable=False)
-    position = Column(VARCHAR(255), nullable=False)
+    name = Column(VARCHAR(150), nullable=False)
+    position = Column(VARCHAR(150), nullable=False)
 
 
 class Languages(Base):
