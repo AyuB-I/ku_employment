@@ -50,7 +50,7 @@ async def ask_q1(message: Message, state: FSMContext):
     """  Start form filling and ask for user's name  """
     await state.set_state(FormFillingStates.q1_name)
     anketa_text_message = await message.answer("Anketa:", reply_markup=ReplyKeyboardRemove())
-    form_message = await message.answer("<b>Ism va familiyangizni to'liq kiriting.</b>\n(Ikramov Akrom)",
+    form_message = await message.answer("<b>F.I.Sh.</b>\nMisol: <i>Ikramov Akrom Murodjon o'g'li</i>)",
                                         reply_markup=home_keyboard)
     await state.update_data(form_message_id=form_message.message_id,
                             anketa_text_message_id=anketa_text_message.message_id)
@@ -61,7 +61,7 @@ async def ask_q2(message: Message, state: FSMContext, bot: Bot):
     """  Ask for the user's date of birth  """
     await state.set_state(FormFillingStates.q2_birth_date)
     full_name = message.text.title()
-    form_text = f"<b>Ism va Familiya:</b> {full_name}\n"
+    form_text = f"<b>F.I.Sh.:</b> {full_name}\n"
     state_data = await state.get_data()
     await bot.edit_message_text(text=form_text, chat_id=message.chat.id,
                                 message_id=state_data["form_message_id"])
@@ -191,14 +191,14 @@ async def ask_q6(call: CallbackQuery, bot: Bot, state: FSMContext, session: Asyn
         form_text = state_data["form_text"] + f"<b>Qiziqtirgan sohalar:</b> {', '.join(profession_titles)}\n"
     await bot.edit_message_text(text=form_text, chat_id=call.message.chat.id, message_id=state_data["form_message_id"])
     await bot.edit_message_text(
-        text="<b>Doyimiy yashash manzilingizni kiriting.</b>\n(Qoʻqon shahri, Turkiston koʻchasi, 28-A uy)",
+        text="<b>Doimiy yashash manzilingizni kiriting.</b>\nMusol: <i>Qoʻqon shahri, Turkiston koʻchasi, 28-A uy</i>)",
         chat_id=call.message.chat.id, message_id=state_data["question_message_id"],
         reply_markup=menu_navigation_keyboard
     )
     await state.update_data(form_text=form_text, profession_titles=profession_titles)
 
 
-@form_filling_router.message(F.text.regexp(r"^[A-Za-z\d\s'-/.,]{3,150}$"), FormFillingStates.q6_address, flags=flags)
+@form_filling_router.message(F.text.regexp(r"^[A-Za-z\d\s'ʻ-/.,]{3,150}$"), FormFillingStates.q6_address, flags=flags)
 async def ask_q7(message: Message, state: FSMContext, bot: Bot):
     """  Ask for the user's nation  """
     await state.set_state(FormFillingStates.q7_nation)
@@ -374,7 +374,7 @@ async def ask_q13(call: CallbackQuery, bot: Bot, state: FSMContext, callback_dat
     form_text = state_data["form_text"] + f"<b>Haydovchilik guvohnomasi:</b> {driver_license_uz}\n" \
                                           f"<b>Tillar:</b>\n"
     await bot.edit_message_text(text=form_text, chat_id=call.message.chat.id, message_id=state_data["form_message_id"])
-    await bot.edit_message_text(text="<b>Rus tilida suxbatlashish darajangiz:</b>", chat_id=call.message.chat.id,
+    await bot.edit_message_text(text="<b>Rus tilida suhbatlashish darajangiz:</b>", chat_id=call.message.chat.id,
                                 message_id=state_data["question_message_id"], reply_markup=level_keyboard)
     await state.update_data(form_text=form_text, driver_license=callback_data.data)
 
@@ -390,7 +390,7 @@ async def ask_q14(call: CallbackQuery, bot: Bot, state: FSMContext, callback_dat
     languages = state_data["languages"]
     languages.append({"name": "rus", "level": callback_data.data})
     await bot.edit_message_text(text=form_text, chat_id=call.message.chat.id, message_id=state_data["form_message_id"])
-    await bot.edit_message_text(text="<b>Ingiliz tilida suxbatlashish darajangiz:</b>", chat_id=call.message.chat.id,
+    await bot.edit_message_text(text="<b>Ingiliz tilida suhbatlashish darajangiz:</b>", chat_id=call.message.chat.id,
                                 message_id=state_data["question_message_id"], reply_markup=level_keyboard)
     await state.update_data(form_text=form_text, languages=languages)
 
@@ -406,7 +406,7 @@ async def ask_q15(call: CallbackQuery, bot: Bot, state: FSMContext, callback_dat
     languages = state_data["languages"]
     languages.append({"name": "ingiliz", "level": callback_data.data})
     await bot.edit_message_text(text=form_text, chat_id=call.message.chat.id, message_id=state_data["form_message_id"])
-    await bot.edit_message_text(text="<b>Yana boshqa biron tilni bilasizmi?</b>", chat_id=call.message.chat.id,
+    await bot.edit_message_text(text="<b>Yana boshqa bir tilni bilasizmi?</b>", chat_id=call.message.chat.id,
                                 message_id=state_data["question_message_id"], reply_markup=confirming_keyboard)
     await state.update_data(form_text=form_text, languages=languages)
 
@@ -467,7 +467,7 @@ async def ask_again_q16(call: CallbackQuery, bot: Bot, state: FSMContext, callba
                                     reply_markup=level_keyboard)
         await state.update_data(applications=[], form_text=form_text)
         return
-    await bot.edit_message_text(text="<b>Yana boshqa biron tilni bilasizmi?</b>", chat_id=call.message.chat.id,
+    await bot.edit_message_text(text="<b>Yana boshqa bir tilni bilasizmi?</b>", chat_id=call.message.chat.id,
                                 message_id=state_data["question_message_id"], reply_markup=confirming_keyboard)
 
 
@@ -528,7 +528,7 @@ async def ask_q19(call: CallbackQuery, bot: Bot, state: FSMContext, callback_dat
     applications = state_data["applications"]
     applications.append({"name": "1c", "level": callback_data.data})
     await bot.edit_message_text(text=form_text, chat_id=call.message.chat.id, message_id=state_data["form_message_id"])
-    await bot.edit_message_text(text="<b>Yana boshqa biron dasturni bilasizmi?</b>", chat_id=call.message.chat.id,
+    await bot.edit_message_text(text="<b>Yana boshqa bir dasturni bilasizmi?</b>", chat_id=call.message.chat.id,
                                 message_id=state_data["question_message_id"], reply_markup=confirming_keyboard)
     await state.update_data(form_text=form_text, applications=applications)
 
@@ -585,7 +585,7 @@ async def ask_again_q19(call: CallbackQuery, bot: Bot, state: FSMContext, callba
         await bot.edit_message_text(text="<b>Qanday ishlashni afzal ko'rasiz?</b>", chat_id=call.message.chat.id,
                                     message_id=state_data["question_message_id"], reply_markup=working_style_keyboard)
         return
-    await bot.edit_message_text(text="<b>Yana boshqa biron dasturni bilasizmi?</b>", chat_id=call.message.chat.id,
+    await bot.edit_message_text(text="<b>Yana boshqa bir dasturni bilasizmi?</b>", chat_id=call.message.chat.id,
                                 message_id=state_data["question_message_id"], reply_markup=confirming_keyboard)
 
 
@@ -884,7 +884,7 @@ async def form_filling_back_buttons(call: CallbackQuery, bot: Bot, state: FSMCon
         await state.set_state(FormFillingStates.q13_ru_lang)
         await edit_form_question(
             call, bot, state, text_to_cut="Rus tili:",
-            question_text="<b>Rus tilida suxbatlashish darajangiz:</b>",
+            question_text="<b>Rus tilida suhbatlashish darajangiz:</b>",
             reply_markup=level_keyboard)
         await state.update_data(languages=[])
 
@@ -892,7 +892,7 @@ async def form_filling_back_buttons(call: CallbackQuery, bot: Bot, state: FSMCon
         await state.set_state(FormFillingStates.q14_eng_lang)
         await edit_form_question(
             call, bot, state, text_to_cut="Ingiliz tili:",
-            question_text="<b>Ingiliz tilida suxbatlashish darajangiz:</b>",
+            question_text="<b>Ingiliz tilida suhbatlashish darajangiz:</b>",
             reply_markup=level_keyboard)
         languages = state_data["languages"]
         languages = languages[:1]
@@ -908,13 +908,13 @@ async def form_filling_back_buttons(call: CallbackQuery, bot: Bot, state: FSMCon
         if len(languages) > 2:  # If user didn't add other language
             last_answer_index = form_text.find(text_to_cut[0]) + len(text_to_cut[0])
             form_text = form_text[:last_answer_index]  # Form text where deleted the answer to last question
-            await bot.edit_message_text(text="<b>Yana boshqa biron tilni bilasizmi?</b>",
+            await bot.edit_message_text(text="<b>Yana boshqa bir tilni bilasizmi?</b>",
                                         chat_id=call.message.chat.id, message_id=state_data["question_message_id"],
                                         reply_markup=confirming_keyboard)
             await bot.edit_message_text(text=form_text, chat_id=call.message.chat.id,
                                         message_id=state_data["form_message_id"])
         else: 
-            await bot.edit_message_text(text="<b>Yana boshqa biron tilni bilasizmi?</b>",
+            await bot.edit_message_text(text="<b>Yana boshqa bir tilni bilasizmi?</b>",
                                         chat_id=call.message.chat.id, message_id=state_data["question_message_id"],
                                         reply_markup=confirming_keyboard)
 
@@ -927,7 +927,7 @@ async def form_filling_back_buttons(call: CallbackQuery, bot: Bot, state: FSMCon
         form_text = state_data["form_text"]
         last_answer_index = form_text.find(f"{state_data['lang_name'].capitalize()}:")
         form_text = form_text[:last_answer_index]  # Form text where deleted the answer to last question
-        await bot.edit_message_text(text="<b>Yana boshqa biron tilni bilasizmi?</b>",
+        await bot.edit_message_text(text="<b>Yana boshqa bir tilni bilasizmi?</b>",
                                     chat_id=call.message.chat.id, message_id=state_data["question_message_id"],
                                     reply_markup=confirming_keyboard)
         await bot.edit_message_text(text=form_text, chat_id=call.message.chat.id,
@@ -938,7 +938,7 @@ async def form_filling_back_buttons(call: CallbackQuery, bot: Bot, state: FSMCon
         await state.set_state(FormFillingStates.q15_other_lang)
         await edit_form_question(
             call, bot, state, text_to_cut="<b>Dasturlar:</b>",
-            question_text="<b>Yana boshqa biron tilni bilasizmi?</b>",
+            question_text="<b>Yana boshqa bir tilni bilasizmi?</b>",
             reply_markup=confirming_keyboard)
 
     elif current_state == "FormFillingStates:q17_excel_app":
@@ -979,13 +979,13 @@ async def form_filling_back_buttons(call: CallbackQuery, bot: Bot, state: FSMCon
         if len(state_data["applications"]) > 3:  # If user didn't add other application
             last_answer_index = form_text.find(text_to_cut[0]) + len(text_to_cut[0])
             form_text = form_text[:last_answer_index]  # Form text where deleted the answer to last question
-            await bot.edit_message_text(text="<b>Yana boshqa biron dasturni bilasizmi?</b>",
+            await bot.edit_message_text(text="<b>Yana boshqa bir dasturni bilasizmi?</b>",
                                         chat_id=call.message.chat.id, message_id=state_data["question_message_id"],
                                         reply_markup=confirming_keyboard)
             await bot.edit_message_text(text=form_text, chat_id=call.message.chat.id,
                                         message_id=state_data["form_message_id"])
         else: 
-            await bot.edit_message_text(text="<b>Yana boshqa biron dasturni bilasizmi?</b>",
+            await bot.edit_message_text(text="<b>Yana boshqa bir dasturni bilasizmi?</b>",
                                         chat_id=call.message.chat.id, message_id=state_data["question_message_id"],
                                         reply_markup=confirming_keyboard)
 
