@@ -50,13 +50,13 @@ async def ask_q1(message: Message, state: FSMContext):
     """  Start form filling and ask for user's name  """
     await state.set_state(FormFillingStates.q1_name)
     anketa_text_message = await message.answer("Anketa:", reply_markup=ReplyKeyboardRemove())
-    form_message = await message.answer("<b>F.I.Sh.</b>\nMisol: <i>Ikramov Akrom Murodjon o'g'li</i>)",
+    form_message = await message.answer("<b>F.I.Sh.</b>\nMisol: <i>Ikramov Akrom Murodjon o'g'li</i>",
                                         reply_markup=home_keyboard)
     await state.update_data(form_message_id=form_message.message_id,
                             anketa_text_message_id=anketa_text_message.message_id)
 
 
-@form_filling_router.message(F.text.regexp(r"^[A-Za-z\s']{4,64}$"), FormFillingStates.q1_name, flags=flags)
+@form_filling_router.message(F.text.regexp(r"^[A-Za-z\s'‘’`]{4,64}$"), FormFillingStates.q1_name, flags=flags)
 async def ask_q2(message: Message, state: FSMContext, bot: Bot):
     """  Ask for the user's date of birth  """
     await state.set_state(FormFillingStates.q2_birth_date)
@@ -198,7 +198,7 @@ async def ask_q6(call: CallbackQuery, bot: Bot, state: FSMContext, session: Asyn
     await state.update_data(form_text=form_text, profession_titles=profession_titles)
 
 
-@form_filling_router.message(F.text.regexp(r"^[A-Za-z\d\s'ʻ-/.,]{3,150}$"), FormFillingStates.q6_address, flags=flags)
+@form_filling_router.message(F.text.regexp(r"^.{3,150}$"), FormFillingStates.q6_address, flags=flags)
 async def ask_q7(message: Message, state: FSMContext, bot: Bot):
     """  Ask for the user's nation  """
     await state.set_state(FormFillingStates.q7_nation)
@@ -293,7 +293,7 @@ async def ask_company_name(call: CallbackQuery, bot: Bot, state: FSMContext):
     await state.update_data(question_message_id=question_message.message_id, form_text=form_text)
 
 
-@form_filling_router.message(F.text.regexp(r"^[A-Za-z\d\s'-/.]{2,150}$"), FormFillingStates.company_name, flags=flags)
+@form_filling_router.message(F.text.regexp(r"^.{2,150}$"), FormFillingStates.company_name, flags=flags)
 async def ask_company_position(message: Message, bot: Bot, state: FSMContext):
     await state.set_state(FormFillingStates.company_position)
     state_data = await state.get_data()
@@ -306,7 +306,7 @@ async def ask_company_position(message: Message, bot: Bot, state: FSMContext):
     await state.update_data(form_text=form_text, company_name=company_name)
 
 
-@form_filling_router.message(F.text.regexp(r"^[A-Za-z\d\s'-/.]{2,150}$"), FormFillingStates.company_position,
+@form_filling_router.message(F.text.regexp(r"^.{2,150}$"), FormFillingStates.company_position,
                              flags=flags)
 async def ask_q11(message: Message, bot: Bot, state: FSMContext):
     await state.set_state(FormFillingStates.q11_marital_status)

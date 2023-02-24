@@ -51,7 +51,7 @@ async def ask_profession_title(message: Message, state: FSMContext, session: Asy
     await state.update_data(first_message_id=first_message.message_id)
 
 
-@admin_router.message(F.text.regexp(r"^[A-Za-z\s'-/.]{2,32}$"), ProfessionStates.asking_title, flags=flags)
+@admin_router.message(F.text.regexp(r"^.{2,32}$"), ProfessionStates.asking_title, flags=flags)
 async def ask_for_confirmation(message: Message, state: FSMContext, bot: Bot):
     """  Ask the user is he really going to add this profession  """
     await state.set_state(ProfessionStates.waiting_for_confirmation)
@@ -231,7 +231,7 @@ async def ask_direction_title(message: Message, state: FSMContext, session: Asyn
     await state.update_data(first_message_id=first_message.message_id)
 
 
-@admin_router.message(F.text.regexp(r"^[A-Za-z\s'-/.]{2,32}$"), DirectionStates.asking_title, flags=flags)
+@admin_router.message(F.text.regexp(r"^.{2,64}$"), DirectionStates.asking_title, flags=flags)
 async def ask_for_confirmation(message: Message, state: FSMContext, bot: Bot):
     """  Ask the user is he really going to add this direction  """
     await state.set_state(DirectionStates.waiting_for_confirmation)
@@ -251,7 +251,7 @@ async def incorrect_title_alert(message: Message, bot: Bot):
     alert_message = await message.answer(
         "<b>Ta'lim yo'nalishining nomi quyidagilarga mos shakilda bo'lishi kerak:</b>\n"
         "1. Lotincha xarflardan iborat bo'lishi\n"
-        "2. 1ta belgidan ko'p bo'lishi va 32ta belgidan kam bo'lishi\n"
+        "2. 1ta belgidan ko'p bo'lishi va 64ta belgidan kam bo'lishi\n"
         "3. Mumkin bo'lgan simvollar:  <code>. / - '</code>")
     await asleep(10)
     await bot.delete_message(chat_id=message.chat.id, message_id=alert_message.message_id)
